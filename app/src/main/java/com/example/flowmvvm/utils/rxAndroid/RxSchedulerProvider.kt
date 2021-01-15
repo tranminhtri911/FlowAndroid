@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class SchedulerProvider : BaseSchedulerProvider {
+class RxSchedulerProvider : RxBaseSchedulerProvider {
 
     @NonNull
     override fun computation(): Scheduler {

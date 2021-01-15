@@ -13,8 +13,8 @@ import com.example.flowmvvm.data.source.remote.api.middleware.DoubleAdapter
 import com.example.flowmvvm.data.source.remote.api.middleware.IntegerAdapter
 import com.example.flowmvvm.di.AppModuleCons.DB_NAME
 import com.example.flowmvvm.utils.DateTimeUtils
-import com.example.flowmvvm.utils.rxAndroid.BaseSchedulerProvider
-import com.example.flowmvvm.utils.rxAndroid.SchedulerProvider
+import com.example.flowmvvm.utils.rxAndroid.RxBaseSchedulerProvider
+import com.example.flowmvvm.utils.rxAndroid.RxSchedulerProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -42,8 +42,8 @@ fun provideSharedPrefsApi(app: Application): SharedPrefsApi {
     return SharedPrefsImpl(app)
 }
 
-fun provideBaseSchedulerProvider(): BaseSchedulerProvider {
-    return SchedulerProvider()
+fun provideBaseSchedulerProvider(): RxBaseSchedulerProvider {
+    return RxSchedulerProvider()
 }
 
 fun provideAppDatabase(app: Application): AppDatabase {

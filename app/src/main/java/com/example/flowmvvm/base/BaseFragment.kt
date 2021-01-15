@@ -10,50 +10,52 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
 abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel> : Fragment() {
-
+    
     protected abstract val viewModelClass: KClass<VM>
-    private val viewModel: VM by viewModel(clazz = viewModelClass)
-
+    val viewModel: VM by viewModel(clazz = viewModelClass)
+    
     protected abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> B
     private var _binding: B? = null
-    private val binding get() = _binding!!
-
+    val binding get() = _binding!!
+    
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = bindingInflater.invoke(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
         setupView()
         bindView()
     }
-
+    
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
+    
     private fun bindViewModel() {
-        viewModel.tag = viewModelClass.simpleName.toString()
-
-        viewModel.isLoading.observe(this, { isShow ->
-            val parentActivity = (context as BaseActivity<*, *>)
-            if (isShow) parentActivity.showLoading() else parentActivity.hideLoading()
-        })
-
-        viewModel.apiError.observe(this, {
-            val parentActivity = (context as BaseActivity<*, *>)
-            parentActivity.onHandleError(it)
-        })
+        with(viewModel) {
+            tag = viewModelClass.simpleName.toString()
+            
+            loadingEvent.observe(this@BaseFragment, {
+                val parentActivity = (context as BaseActivity<*, *>)
+                parentActivity.setLoading(it)
+            })
+            
+            errorEvent.observe(this@BaseFragment, {
+                val parentActivity = (context as BaseActivity<*, *>)
+                parentActivity.onHandleError(it)
+            })
+        }
     }
-
+    
     protected abstract fun setupView()
-
+    
     protected abstract fun bindView()
 }
