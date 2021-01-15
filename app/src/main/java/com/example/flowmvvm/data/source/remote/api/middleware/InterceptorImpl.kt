@@ -29,7 +29,7 @@ class InterceptorImpl(private var tokenRepository: TokenRepository?) : Intercept
 
         if (!mIsRefreshToken && response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
 
-            //TODO refresh Token
+            //TODO refresh Token or return exception
 
             builder.removeHeader(KEY_TOKEN)
 

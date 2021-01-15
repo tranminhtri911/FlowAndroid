@@ -3,7 +3,7 @@ package com.example.flowmvvm.utils.rxAndroid
 import androidx.annotation.NonNull
 import io.reactivex.rxjava3.core.Scheduler
 
-interface BaseSchedulerProvider {
+interface RxBaseSchedulerProvider {
 
     @NonNull
     fun computation(): Scheduler

@@ -3,7 +3,7 @@ package com.example.flowmvvm.di
 import android.app.Application
 import com.example.flowmvvm.BuildConfig
 import com.example.flowmvvm.data.source.remote.api.middleware.InterceptorImpl
-import com.example.flowmvvm.data.source.remote.service.AppApi
+import com.example.flowmvvm.data.source.remote.service.ApiService
 import com.example.flowmvvm.data.source.repositories.TokenRepository
 import com.example.flowmvvm.di.NetWorkInstant.CONNECTION_TIMEOUT
 import com.example.flowmvvm.di.NetWorkInstant.READ_TIMEOUT
@@ -18,19 +18,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-
 val NetworkModule = module {
-
+    
     single { provideOkHttpCache(get()) }
-
+    
     single { provideOkHttpClient(get(), get()) }
-
+    
     single { provideInterceptor(get()) }
-
+    
     single { provideRetrofit(get(), get()) }
-
-    single { provideNameApi(get()) }
-
+    
+    single { provideApiService(get()) }
+    
 }
 
 fun provideOkHttpCache(app: Application): Cache {
@@ -43,41 +42,40 @@ fun provideInterceptor(tokenRepository: TokenRepository): Interceptor {
     return InterceptorImpl(tokenRepository)
 }
 
-
 fun provideOkHttpClient(cache: Cache, interceptor: Interceptor): OkHttpClient {
     val httpClientBuilder = OkHttpClient.Builder()
     httpClientBuilder.cache(cache)
     httpClientBuilder.addInterceptor(interceptor)
-
+    
     httpClientBuilder.readTimeout(
-        READ_TIMEOUT, TimeUnit.SECONDS
+            READ_TIMEOUT, TimeUnit.SECONDS
     )
     httpClientBuilder.writeTimeout(
-        WRITE_TIMEOUT, TimeUnit.SECONDS
+            WRITE_TIMEOUT, TimeUnit.SECONDS
     )
     httpClientBuilder.connectTimeout(
-        CONNECTION_TIMEOUT, TimeUnit.SECONDS
+            CONNECTION_TIMEOUT, TimeUnit.SECONDS
     )
-
+    
     if (BuildConfig.DEBUG) {
         val logging = HttpLoggingInterceptor()
         httpClientBuilder.addInterceptor(logging)
         logging.level = HttpLoggingInterceptor.Level.BODY
     }
-
+    
     return httpClientBuilder.build()
 }
 
 fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .client(okHttpClient)
-        .build()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
 }
 
-fun provideNameApi(retrofit: Retrofit): AppApi {
-    return retrofit.create(AppApi::class.java)
+fun provideApiService(retrofit: Retrofit): ApiService {
+    return retrofit.create(ApiService::class.java)
 }
 
 object NetWorkInstant {

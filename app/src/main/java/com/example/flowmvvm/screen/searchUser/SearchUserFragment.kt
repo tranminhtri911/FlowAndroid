@@ -15,6 +15,9 @@ class SearchUserFragment : BaseFragment<FragmentSearchUserBinding, SearchUserVie
         get() = FragmentSearchUserBinding::inflate
 
     override fun setupView() {
+        binding.text.setOnClickListener {
+            viewModel.fetchData()
+        }
     }
 
     override fun bindView() {
