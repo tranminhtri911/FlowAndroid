@@ -14,7 +14,7 @@ abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel> : Fragment() {
     protected abstract val viewModelClass: KClass<VM>
     private val viewModel: VM by viewModel(clazz = viewModelClass)
 
-    protected abstract val bindingInflater: (LayoutInflater, ViewGroup?) -> B
+    protected abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> B
     private var _binding: B? = null
     private val binding get() = _binding!!
 
@@ -23,7 +23,7 @@ abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = bindingInflater.invoke(inflater, container)
+        _binding = bindingInflater.invoke(inflater, container, false)
         return binding.root
     }
 
