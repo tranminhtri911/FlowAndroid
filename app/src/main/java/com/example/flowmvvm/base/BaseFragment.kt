@@ -44,15 +44,23 @@ abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel> : Fragment() {
             tag = viewModelClass.simpleName.toString()
             
             loadingEvent.observe(this@BaseFragment, {
-                val parentActivity = (context as BaseActivity<*, *>)
-                parentActivity.setLoading(it)
+                setLoading(it)
             })
             
             errorEvent.observe(this@BaseFragment, {
-                val parentActivity = (context as BaseActivity<*, *>)
-                parentActivity.onHandleError(it)
+                onHandleError(it)
             })
         }
+    }
+    
+    fun setLoading(isShow: Boolean) {
+        val parentActivity = (context as BaseActivity<*, *>)
+        parentActivity.setLoading(isShow)
+    }
+    
+    fun onHandleError(throwable: Throwable) {
+        val parentActivity = (context as BaseActivity<*, *>)
+        parentActivity.onHandleError(throwable)
     }
     
     protected abstract fun setupView()

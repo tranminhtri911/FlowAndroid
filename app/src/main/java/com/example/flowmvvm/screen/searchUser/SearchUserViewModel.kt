@@ -10,14 +10,15 @@ import kotlinx.coroutines.launch
 
 class SearchUserViewModel
 constructor(private val userRepository: UserRepository) : BaseViewModel() {
-    
+
     fun fetchData() {
+
         viewModelScope.launch {
             userRepository.searchRepository("catch", 1)
-                    .catch { onError(it) }
-                    .collect {
-                        LogUtils.d("userRepository", it.size.toString())
-                    }
+                .catch { onError(it) }
+                .collect {
+                    LogUtils.d("userRepository", it.size.toString())
+                }
         }
     }
 }

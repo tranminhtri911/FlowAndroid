@@ -2,7 +2,6 @@ package com.example.flowmvvm.data.source.remote.service
 
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.data.source.remote.api.response.ApiResponse
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,6 +11,7 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("/search/repositories")
     suspend fun searchRepository(
-            @Query("q") query: String?,
-            @Query("page") page: Int): ApiResponse<List<User>>
+        @Query("q") query: String?,
+        @Query("page") page: Int
+    ): ApiResponse<List<User>>
 }

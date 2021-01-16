@@ -3,6 +3,7 @@ package com.example.flowmvvm.data.source.repositories
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.data.source.local.sharedprf.SharedPrefsApi
 import com.example.flowmvvm.data.source.local.sharedprf.SharedPrefsKey
+import com.example.flowmvvm.data.source.remote.api.response.ApiResponse
 import com.example.flowmvvm.data.source.remote.service.ApiService
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,9 @@ import kotlinx.coroutines.flow.mapNotNull
 
 interface UserRepository {
     
-    fun searchRepository(query: String?, page: Int): Flow<List<User>>
+    fun searchRepository(query: String, page: Int): Flow<List<User>>
+    
+    suspend fun searchRepositoryPaging(query: String, page: Int): ApiResponse<List<User>>
     
     fun saveUserToLocal(user: User)
     
@@ -23,14 +26,19 @@ interface UserRepository {
 class UserRepositoryImpl
 constructor(
         private val apiService: ApiService,
-        private val sharedPrefsApi: SharedPrefsApi) : UserRepository {
+        private val sharedPrefsApi: SharedPrefsApi
+) : UserRepository {
     
     private val gson = Gson()
     
-    override fun searchRepository(query: String?, page: Int): Flow<List<User>> {
+    override fun searchRepository(query: String, page: Int): Flow<List<User>> {
         return flow { emit(apiService.searchRepository(query, page)) }
                 .mapNotNull { it.data }
-                .flowOn(Dispatchers.Default)
+                .flowOn(Dispatchers.IO)
+    }
+    
+    override suspend fun searchRepositoryPaging(query: String, page: Int): ApiResponse<List<User>> {
+        return apiService.searchRepository(query, page)
     }
     
     override fun saveUserToLocal(user: User) {

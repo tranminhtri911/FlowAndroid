@@ -33,7 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private lateinit var runnable: Runnable
     private var isDoubleTapBack = false
 
-    private val navHelper: NavHelper by lazy {
+    val navHelper: NavHelper by lazy {
         NavHelperImpl.createBuilder()
             .tabs(numberOfTab = 3)
             .mainFraManager(fragManager = supportFragmentManager)
