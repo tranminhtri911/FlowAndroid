@@ -2,7 +2,6 @@ package com.example.flowmvvm.di
 
 import com.example.flowmvvm.screen.MainViewModel
 import com.example.flowmvvm.screen.favorite.FavoriteUserViewModel
-import com.example.flowmvvm.screen.paging.PagingUserFragment
 import com.example.flowmvvm.screen.paging.PagingUserViewModel
 import com.example.flowmvvm.screen.searchUser.SearchUserViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,5 +15,5 @@ val ViewModelModule: Module = module {
 
     viewModel { FavoriteUserViewModel(get(), get()) }
 
-    viewModel { PagingUserViewModel(get(), get()) }
+    viewModel { PagingUserViewModel(get()) }
 }
