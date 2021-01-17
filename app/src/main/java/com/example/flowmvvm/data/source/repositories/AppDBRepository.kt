@@ -2,6 +2,7 @@ package com.example.flowmvvm.data.source.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.asLiveData
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.data.source.local.dao.AppDatabase
 import com.example.flowmvvm.data.source.local.dao.UserEntity
@@ -10,9 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 interface AppDBRepository {
-    fun getUsers(): LiveData<MutableList<User>>
+    fun getUsers(): LiveData<List<User>>
     
     fun deleteUser(user: User): Flow<Unit>
     
@@ -24,8 +26,13 @@ interface AppDBRepository {
 class AppDBRepositoryImpl
 constructor(private val appDB: AppDatabase, private val gson: Gson) : AppDBRepository {
     
-    override fun getUsers(): LiveData<MutableList<User>> {
-        return transformUserEntity(appDB.userDao().getAll())
+    override fun getUsers(): LiveData<List<User>> {
+        return appDB.userDao().getAll()
+                .map { list ->
+                    list.map { it.userFromEntity(gson) }
+                }
+                .flowOn(Dispatchers.IO)
+                .asLiveData()
     }
     
     override fun deleteUser(user: User): Flow<Unit> {

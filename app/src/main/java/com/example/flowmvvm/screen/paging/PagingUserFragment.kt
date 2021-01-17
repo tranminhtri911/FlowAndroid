@@ -49,13 +49,13 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
         
         viewModel.networkState.observe(this, { state ->
             adapter.setNetworkState(state)
-    
+            binding.swipeRefreshLayout.isRefreshing = false
+            
             when (state) {
                 is NetworkState.ERROR -> {
-                    onHandleError(state.exception)
+                    onHandleError(state.throwable)
                 }
                 else -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
         })

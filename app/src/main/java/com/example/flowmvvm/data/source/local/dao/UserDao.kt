@@ -1,13 +1,13 @@
 package com.example.flowmvvm.data.source.local.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
     
     @Query("SELECT * FROM USER_DB")
-    fun getAll(): LiveData<List<UserEntity>>
+    fun getAll(): Flow<List<UserEntity>>
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(user: UserEntity)

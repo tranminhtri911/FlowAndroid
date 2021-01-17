@@ -1,7 +1,7 @@
 package com.example.flowmvvm.widgets.dialogManager
 
 import android.content.Context
-import com.example.flowmvvm.utils.Constant
+import com.example.flowmvvm.utils.Constants
 import com.example.flowmvvm.utils.LogUtils
 import com.example.flowmvvm.utils.extension.notNull
 
@@ -31,7 +31,7 @@ class DialogManagerImpl(ctx: Context?) : DialogManager {
 
     override fun onRelease() {
         progressDialog = null
-        LogUtils.d(TAG, Constant.RELEASED)
+        LogUtils.d(TAG, Constants.RELEASED)
     }
 
     companion object {

@@ -3,13 +3,12 @@ package com.example.flowmvvm.screen.favorite
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flowmvvm.base.BaseFragment
 import com.example.flowmvvm.base.recyclerView.OnItemClickListener
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.databinding.FragmentFavoriteUserBinding
-import com.example.flowmvvm.utils.LogUtils
+import com.example.flowmvvm.screen.searchUser.UserAdapter
 import com.example.flowmvvm.utils.liveData.autoCleared
 import kotlin.reflect.KClass
 
@@ -40,9 +39,9 @@ class FavoriteUserFragment : BaseFragment<FragmentFavoriteUserBinding, FavoriteU
     }
     
     override fun bindView() {
-        viewModel.users.observe(this, {
-            adapter.updateData(it)
-        })
+        viewModel.users.observe(viewLifecycleOwner) {
+            adapter.updateData(it.toMutableList())
+        }
     }
     
     companion object {

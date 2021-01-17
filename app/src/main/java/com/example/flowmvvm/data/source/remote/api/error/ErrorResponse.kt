@@ -1,6 +1,6 @@
 package  com.example.flowmvvm.data.source.remote.api.error
 
-import com.example.flowmvvm.utils.Constant
+import com.example.flowmvvm.utils.Constants
 import com.example.flowmvvm.utils.LogUtils
 import com.example.flowmvvm.utils.extension.notNull
 import com.example.flowmvvm.utils.extension.toStringWithFormatPattern
@@ -40,7 +40,7 @@ class ErrorResponse {
             get() = if (messages.isNullOrEmpty()) {
                 null
             } else {
-                messages.toStringWithFormatPattern(Constant.PATTERN_FORMAT.ENTER_SPACE)
+                messages.toStringWithFormatPattern(Constants.PATTERN_FORMAT.ENTER_SPACE)
             }
     }
     
