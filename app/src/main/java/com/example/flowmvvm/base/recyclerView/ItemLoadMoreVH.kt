@@ -4,14 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.flowmvvm.base.paging.NetworkState
-import com.example.flowmvvm.base.paging.Status
 import com.example.flowmvvm.databinding.ItemLoadMoreBinding
 
 class ItemLoadMoreVH
 constructor(private val binding: ItemLoadMoreBinding) : BaseItemVH<Boolean>(binding) {
     
-    fun bindTo(networkState: NetworkState?) {
-        binding.progress.visibility = toVisibility(networkState?.status == Status.LOAD_MORE)
+    fun bindTo(networkState: NetworkState<Any>?) {
+        binding.progress.visibility = toVisibility(networkState == NetworkState.LOAD_MORE)
     }
     
     private fun toVisibility(constraint: Boolean): Int {

@@ -10,7 +10,7 @@ import com.example.flowmvvm.base.recyclerView.ItemLoadMoreVH
 abstract class BassePagingDataAdapter<T : Any>
     (diffUtil: DiffUtil.ItemCallback<T>) : PagingDataAdapter<T, RecyclerView.ViewHolder>(diffUtil) {
 
-    private var networkState: NetworkState? = null
+    private var networkState: NetworkState<Any>? = null
 
     override fun getItemViewType(position: Int): Int {
         return if (hasExtraRow() && position == networkStatePosition()) {
@@ -53,7 +53,7 @@ abstract class BassePagingDataAdapter<T : Any>
      *
      * @param newNetworkState the new network state
      */
-    fun setNetworkState(newNetworkState: NetworkState?) {
+    fun setNetworkState(newNetworkState: NetworkState<Any>?) {
         val previousState = this.networkState
         val hadExtraRow = hasExtraRow()
 

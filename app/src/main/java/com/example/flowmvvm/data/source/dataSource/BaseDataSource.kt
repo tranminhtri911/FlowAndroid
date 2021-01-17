@@ -4,9 +4,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.paging.PagingSource
 import com.example.flowmvvm.base.paging.NetworkState
+import com.example.flowmvvm.utils.LogUtils
 import retrofit2.HttpException
 import java.io.IOException
-
 
 /**
  * BaseDataSourceFactory
@@ -36,8 +36,8 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
         
         return try {
             val data: List<T> = loadData(nextPage = nextPage)
-    
-            updateState(NetworkState.LOADED)
+            
+            updateState(NetworkState.SUCCESS(null))
             
             LoadResult.Page(
                     data = data,
@@ -45,10 +45,10 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
                     nextKey = nextPage + 1
             )
         } catch (exception: IOException) {
-            updateState(NetworkState.toError(exception))
+            updateState(NetworkState.ERROR(exception))
             LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            updateState(NetworkState.toError(exception))
+            updateState(NetworkState.ERROR(exception))
             LoadResult.Error(exception)
         }
     }
@@ -69,7 +69,9 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
         invalidate()
     }
     
-    private fun updateState(state: NetworkState) {
+    private fun updateState(state: NetworkState<Any>) {
+        LogUtils.d("NetworkState", state.toString())
+        
         runnable = Runnable { listener?.onNetWorkStateChange(state) }
         handler?.postDelayed(runnable, 100)
     }

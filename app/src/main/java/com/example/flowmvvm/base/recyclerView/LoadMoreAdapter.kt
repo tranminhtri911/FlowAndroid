@@ -7,7 +7,7 @@ import com.example.flowmvvm.base.paging.NetworkState
 @Suppress("UNCHECKED_CAST")
 abstract class LoadMoreAdapter<T> : BaseRecyclerViewAdapter<T, RecyclerView.ViewHolder>() {
     
-    private var networkState: NetworkState? = null
+    private var networkState: NetworkState<Any>? = null
     
     override fun getItemViewType(position: Int): Int {
         return if (hasExtraRow() && position == networkStatePosition()) {
@@ -39,7 +39,7 @@ abstract class LoadMoreAdapter<T> : BaseRecyclerViewAdapter<T, RecyclerView.View
     private fun networkStatePosition(): Int = itemCount - 1
     
     private fun hasExtraRow(): Boolean {
-        return networkState != null && networkState != NetworkState.LOADED
+        return networkState != null && networkState == NetworkState.LOAD_MORE
     }
     
     /**
@@ -50,7 +50,7 @@ abstract class LoadMoreAdapter<T> : BaseRecyclerViewAdapter<T, RecyclerView.View
      *
      * @param newNetworkState the new network state
      */
-    fun setNetworkState(newNetworkState: NetworkState?) {
+    fun setNetworkState(newNetworkState: NetworkState<Any>?) {
         val previousState = this.networkState
         val hadExtraRow = hasExtraRow()
         
