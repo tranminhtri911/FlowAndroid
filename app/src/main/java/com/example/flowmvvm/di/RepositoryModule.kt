@@ -16,7 +16,7 @@ val RepositoryModule = module {
     
     single { provideAppDBRepository(get(), get()) }
     
-    single { provideUserRepository(get(), get()) }
+    single { provideUserRepository(get(), get(), get()) }
 }
 
 fun provideTokenRepository(app: Application): TokenRepository {
@@ -27,6 +27,8 @@ fun provideAppDBRepository(appDatabase: AppDatabase, gson: Gson): AppDBRepositor
     return AppDBRepositoryImpl(appDatabase, gson)
 }
 
-fun provideUserRepository(apiService: ApiService, sharedPrefsApi: SharedPrefsApi): UserRepository {
-    return UserRepositoryImpl(apiService, sharedPrefsApi)
+fun provideUserRepository(apiService: ApiService,
+        sharedPrefsApi: SharedPrefsApi,
+        gson: Gson): UserRepository {
+    return UserRepositoryImpl(apiService, sharedPrefsApi, gson)
 }

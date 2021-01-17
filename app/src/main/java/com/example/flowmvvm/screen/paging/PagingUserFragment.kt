@@ -6,12 +6,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flowmvvm.base.BaseFragment
-import com.example.flowmvvm.base.paging.Status
+import com.example.flowmvvm.base.paging.NetworkState
 import com.example.flowmvvm.base.recyclerView.OnItemClickListener
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.databinding.FragmentPagingUserBinding
-import com.example.flowmvvm.utils.LogUtils
-import com.example.flowmvvm.utils.extension.notNull
 import com.example.flowmvvm.utils.liveData.autoCleared
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,7 +28,7 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
     override fun setupView() {
         adapter = PagingUserAdapter(object : OnItemClickListener<User> {
             override fun onItemClick(item: User, position: Int, view: View?) {
-                LogUtils.d("onItemClick", item.fullName.toString())
+                viewModel.insertUser(item)
             }
         })
         
@@ -50,17 +48,14 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
         }
         
         viewModel.networkState.observe(this, { state ->
-            LogUtils.d("NetworkState", state.toString())
             adapter.setNetworkState(state)
     
-            when (state.status) {
-                Status.FETCH -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
-                }
-                Status.FAILED -> {
-                    state.error.notNull { onHandleError(it) }
+            when (state) {
+                is NetworkState.ERROR -> {
+                    onHandleError(state.exception)
                 }
                 else -> {
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
         })

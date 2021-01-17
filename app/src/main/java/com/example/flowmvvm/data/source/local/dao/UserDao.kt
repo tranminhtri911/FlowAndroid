@@ -5,24 +5,19 @@ import androidx.room.*
 
 @Dao
 interface UserDao {
-
+    
     @Query("SELECT * FROM USER_DB")
-    fun getUsers(): LiveData<List<UserEntity>>
-
-/*
-    @Query("SELECT * FROM USER_DB")
-    fun getUsersPageList(): DataSource.Factory<Int, User>
-*/
-
+    fun getAll(): LiveData<List<UserEntity>>
+    
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateUser(user: UserEntity)
-
+    fun insertOrUpdate(user: UserEntity)
+    
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun updateAllUser(users: List<UserEntity>)
-
+    fun insertOrUpdateAll(users: List<UserEntity>)
+    
     @Delete
-    fun deleteUser(user: UserEntity)
-
+    fun delete(user: UserEntity)
+    
     @Query("DELETE FROM USER_DB")
     fun deleteAll()
 }

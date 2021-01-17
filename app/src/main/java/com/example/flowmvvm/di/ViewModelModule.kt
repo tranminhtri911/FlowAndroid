@@ -10,10 +10,10 @@ import org.koin.dsl.module
 
 val ViewModelModule: Module = module {
     viewModel { MainViewModel() }
-
+    
     viewModel { SearchUserViewModel(get()) }
-
+    
     viewModel { FavoriteUserViewModel(get(), get()) }
-
-    viewModel { PagingUserViewModel(get()) }
+    
+    viewModel { PagingUserViewModel(get(), get()) }
 }

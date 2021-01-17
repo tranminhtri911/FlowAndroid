@@ -5,25 +5,28 @@ import com.example.flowmvvm.utils.extension.notNull
 import com.google.gson.Gson
 import java.util.*
 
-class Converters {
-
+object JsonConverter {
+    
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
     }
-
+    
     @TypeConverter
     fun dateToTimestamp(date: Date?): Long? {
-        return date?.time?.toLong()
+        return date?.time
     }
-
+    
     @TypeConverter
-    fun objectsToJson(objects: Any, gson: Gson): String? {
-        return gson.toJson(objects)
+    fun toJson(objects: Any?, gson: Gson = Gson()): String? {
+        objects.notNull {
+            return gson.toJson(it)
+        }
+        return null
     }
-
+    
     @TypeConverter
-    fun jsonToObjects(json: String, gson: Gson, type: Class<*>): Any? {
+    fun <T> toObject(json: String?, type: Class<T>, gson: Gson = Gson()): T? {
         json.notNull {
             return gson.fromJson(it, type)
         }

@@ -26,10 +26,9 @@ interface UserRepository {
 class UserRepositoryImpl
 constructor(
         private val apiService: ApiService,
-        private val sharedPrefsApi: SharedPrefsApi
+        private val sharedPrefsApi: SharedPrefsApi,
+        private val gson: Gson
 ) : UserRepository {
-    
-    private val gson = Gson()
     
     override fun searchRepository(query: String, page: Int): Flow<List<User>> {
         return flow { emit(apiService.searchRepository(query, page)) }
