@@ -1,7 +1,7 @@
 package com.example.flowmvvm.base.recyclerView
 
 import android.view.View
-import com.example.flowmvvm.utils.Constant.POSITION_DEFAULT
+import com.example.flowmvvm.utils.Constants.POSITION_DEFAULT
 
 /**
  * OnItemClickListener

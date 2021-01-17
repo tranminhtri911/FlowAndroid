@@ -2,6 +2,7 @@ package com.example.flowmvvm.data.source.dataSource
 
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import com.example.flowmvvm.base.paging.NetworkState
 import com.example.flowmvvm.utils.LogUtils
@@ -17,11 +18,11 @@ import java.io.IOException
 
 abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
     
-    private var listener: PagingSourceListener? = null
-    
     private lateinit var runnable: Runnable
     
     private var handler: Handler? = Handler(Looper.getMainLooper())
+    
+    var netWorkState = MutableLiveData<NetworkState<Any>>()
     
     abstract suspend fun loadData(nextPage: Int): List<T>
     
@@ -53,13 +54,7 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
         }
     }
     
-    fun registerListener(pagingSourceListener: PagingSourceListener) {
-        listener = pagingSourceListener
-    }
-    
     fun onClear() {
-        listener = null
-        
         handler?.removeCallbacks(runnable)
         handler = null
     }
@@ -70,9 +65,9 @@ abstract class BaseDataSource<T : Any> : PagingSource<Int, T>() {
     }
     
     private fun updateState(state: NetworkState<Any>) {
-        LogUtils.d("NetworkState", state.toString())
+        LogUtils.d("BaseDataSource, NetworkState: ", state.toString())
         
-        runnable = Runnable { listener?.onNetWorkStateChange(state) }
+        runnable = Runnable { netWorkState.value = state }
         handler?.postDelayed(runnable, 100)
     }
 }

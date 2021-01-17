@@ -1,28 +1,32 @@
-package com.example.flowmvvm.screen.favorite
+package com.example.flowmvvm.screen.searchUser
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flowmvvm.base.recyclerView.BaseItemVH
-import com.example.flowmvvm.base.recyclerView.BaseRecyclerViewAdapter
+import com.example.flowmvvm.base.recyclerView.LoadMoreAdapter
 import com.example.flowmvvm.base.recyclerView.OnItemClickListener
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.databinding.ItemUserBinding
 import com.example.flowmvvm.utils.extension.loadImageCircleUrl
 import com.example.flowmvvm.utils.extension.notNull
 
-class UserAdapter : BaseRecyclerViewAdapter<User, RecyclerView.ViewHolder>() {
+class UserAdapter : LoadMoreAdapter<User>() {
     
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateVH(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemUserBinding.inflate(inflater, parent, false)
         return ItemViewHolder(binding, itemClickListener)
     }
     
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindVH(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemViewHolder) {
             getItem(position).notNull { holder.bindModel(it) }
         }
+    }
+    
+    override fun getViewType(position: Int): Int {
+        return 0
     }
     
     companion object {

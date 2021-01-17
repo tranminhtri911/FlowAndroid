@@ -75,6 +75,12 @@ android {
     kapt {
         mapDiagnosticLocations = true
     }
+
+    kotlinOptions.freeCompilerArgs += [
+        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
+        "-Xuse-experimental=kotlinx.coroutines.ExperimentalContracts",
+        "-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
 }
 
 dependencies {

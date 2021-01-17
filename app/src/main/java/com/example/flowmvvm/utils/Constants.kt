@@ -1,6 +1,6 @@
 package com.example.flowmvvm.utils
 
-object Constant {
+object Constants {
 
     const val RELEASED = "RELEASED"
     

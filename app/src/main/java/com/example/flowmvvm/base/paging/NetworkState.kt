@@ -29,6 +29,6 @@ constructor(
 sealed class NetworkState<out T : Any> {
     object FETCH : NetworkState<Nothing>()
     object LOAD_MORE : NetworkState<Nothing>()
-    data class SUCCESS<out T : Any>(val data: T?) : NetworkState<T>()
-    data class ERROR(val exception: Exception) : NetworkState<Nothing>()
+    data class SUCCESS<out T : Any>(val data: T?, val isLoadMore: Boolean = false) : NetworkState<T>()
+    data class ERROR(val throwable: Throwable) : NetworkState<Nothing>()
 }

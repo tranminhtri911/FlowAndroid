@@ -1,7 +1,7 @@
 package com.example.flowmvvm.base
 
 import androidx.lifecycle.ViewModel
-import com.example.flowmvvm.utils.Constant
+import com.example.flowmvvm.utils.Constants
 import com.example.flowmvvm.utils.LogUtils
 import com.example.flowmvvm.utils.liveData.SingleLiveEvent
 
@@ -24,6 +24,6 @@ abstract class BaseViewModel : ViewModel() {
         loadingEvent.clear()
         errorEvent.clear()
         
-        LogUtils.d(tag, Constant.RELEASED)
+        LogUtils.d(tag, Constants.RELEASED)
     }
 }
