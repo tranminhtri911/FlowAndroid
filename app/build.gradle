@@ -6,12 +6,16 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+apply from: '../autodimension.gradle'
+
+def APP_ID = "com.example.flowmvvm"
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.flowmvvm"
+        applicationId "${APP_ID}"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -77,10 +81,10 @@ android {
     }
 
     kotlinOptions.freeCompilerArgs += [
-        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
-        "-Xuse-experimental=kotlinx.coroutines.ExperimentalContracts",
-        "-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalContracts",
+            "-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
 }
 
 dependencies {
