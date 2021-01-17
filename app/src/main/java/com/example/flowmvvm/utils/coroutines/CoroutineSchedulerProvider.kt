@@ -1,3 +1,0 @@
-package com.example.flowmvvm.utils.coroutines
-
-class CoroutineSchedulerProvider

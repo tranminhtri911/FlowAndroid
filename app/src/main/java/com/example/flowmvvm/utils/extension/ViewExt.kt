@@ -24,22 +24,3 @@ fun View.isVisible(): Boolean {
 
 fun Context.showToast(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
-fun View.clicks(): Flow<Unit> = callbackFlow {
-    setOnClickListener {
-        offer(Unit)
-    }
-    awaitClose { setOnClickListener(null) }
-}
-
-fun <T> Flow<T>.throttleFirst(duration: Long): Flow<T> = flow {
-    var lastEmissionTime = 0L
-    collect { upstream ->
-        val currentTime = System.currentTimeMillis()
-        val mayEmit = currentTime - lastEmissionTime > duration
-        if (mayEmit) {
-            lastEmissionTime = currentTime
-            emit(upstream)
-        }
-    }
-}
