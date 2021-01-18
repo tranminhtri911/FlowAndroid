@@ -8,30 +8,30 @@ import com.example.flowmvvm.R
 import com.example.flowmvvm.widgets.navigation.NavAnimateType
 
 fun Fragment.addOrReplaceFragment(
-    @IdRes containerId: Int,
-    fragmentManager: FragmentManager? = parentFragmentManager,
-    fragment: Fragment,
-    isAddFrag: Boolean,
-    addToBackStack: Boolean = true,
-    animateType: NavAnimateType,
-    tag: String = fragment::class.java.simpleName
+        @IdRes containerId: Int,
+        fragmentManager: FragmentManager? = parentFragmentManager,
+        fragment: Fragment,
+        isAddFrag: Boolean,
+        addToBackStack: Boolean = true,
+        animateType: NavAnimateType,
+        tag: String = fragment::class.java.simpleName
 ) {
     fragmentManager?.transact {
         setAnimations(animateType = animateType)
-
+        
         if (addToBackStack) {
             addToBackStack(tag)
         }
-
+        
         if (isAddFrag) {
-            add(fragment, tag)
+            add(containerId, fragment, tag)
         } else {
             replace(containerId, fragment, tag)
         }
     }
 }
 
-fun Fragment.goBackFragment(): Boolean {
+fun Fragment.popBackFragment(): Boolean {
     with(parentFragmentManager) {
         val isShowPreviousPage = this.backStackEntryCount > 0
         if (isShowPreviousPage) {

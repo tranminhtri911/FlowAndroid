@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
@@ -17,6 +19,9 @@ abstract class BaseFragment<B : ViewBinding, VM : BaseViewModel> : Fragment() {
     protected abstract val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> B
     private var _binding: B? = null
     val binding get() = _binding!!
+    
+    protected val coroutineScope: LifecycleCoroutineScope
+        get() = viewLifecycleOwner.lifecycleScope
     
     override fun onCreateView(
             inflater: LayoutInflater,

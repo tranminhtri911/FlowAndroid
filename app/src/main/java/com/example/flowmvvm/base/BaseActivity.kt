@@ -1,9 +1,10 @@
 package com.example.flowmvvm.base
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.example.flowmvvm.data.source.remote.api.error.ErrorResponse
 import com.example.flowmvvm.utils.extension.notNull
@@ -21,11 +22,15 @@ abstract class BaseActivity<B : ViewBinding, VM : BaseViewModel> : AppCompatActi
     protected abstract val bindingInflater: (LayoutInflater) -> B
     protected val binding: B by lazy { bindingInflater.invoke(layoutInflater) }
     
-    private val dialogManager: DialogManager by lazy { DialogManagerImpl(this) }
+    protected val coroutineScope: LifecycleCoroutineScope
+        get() = lifecycleScope
+    
+    private lateinit var dialogManager: DialogManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        dialogManager = DialogManagerImpl(this)
         bindViewModel()
         setupView()
         bindView()
