@@ -3,16 +3,17 @@ package com.example.flowmvvm.screen.paging
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flowmvvm.base.BaseFragment
 import com.example.flowmvvm.base.paging.NetworkState
 import com.example.flowmvvm.base.recyclerView.OnItemClickListener
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.databinding.FragmentPagingUserBinding
+import com.example.flowmvvm.screen.MainViewModel
 import com.example.flowmvvm.utils.liveData.autoCleared
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import kotlin.reflect.KClass
 
 class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserViewModel>() {
@@ -25,10 +26,14 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
     
     private var adapter by autoCleared<PagingUserAdapter>()
     
+    private val mainViewModel by sharedViewModel<MainViewModel>()
+    
     override fun setupView() {
         adapter = PagingUserAdapter(object : OnItemClickListener<User> {
             override fun onItemClick(item: User, position: Int, view: View?) {
                 viewModel.insertUser(item)
+        
+                coroutineScope.launch { mainViewModel.testBehaviorRelay.onNext(value = item) }
             }
         })
         
@@ -50,7 +55,7 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
         viewModel.networkState.observe(this, { state ->
             adapter.setNetworkState(state)
             binding.swipeRefreshLayout.isRefreshing = false
-            
+    
             when (state) {
                 is NetworkState.ERROR -> {
                     onHandleError(state.throwable)
@@ -60,7 +65,7 @@ class PagingUserFragment : BaseFragment<FragmentPagingUserBinding, PagingUserVie
             }
         })
         
-        viewLifecycleOwner.lifecycleScope.launch {
+        coroutineScope.launch {
             viewModel.userPager.collectLatest {
                 adapter.submitData(it)
             }

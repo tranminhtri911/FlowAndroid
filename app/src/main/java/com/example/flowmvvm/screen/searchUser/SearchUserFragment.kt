@@ -3,7 +3,6 @@ package com.example.flowmvvm.screen.searchUser
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flowmvvm.base.BaseFragment
 import com.example.flowmvvm.base.paging.NetworkState
@@ -11,14 +10,14 @@ import com.example.flowmvvm.base.recyclerView.EndlessRecyclerOnScrollListener
 import com.example.flowmvvm.base.recyclerView.OnItemClickListener
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.databinding.FragmentSearchUserBinding
+import com.example.flowmvvm.screen.MainViewModel
 import com.example.flowmvvm.utils.LogUtils
 import com.example.flowmvvm.utils.extension.*
 import com.example.flowmvvm.utils.liveData.autoCleared
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import kotlin.reflect.KClass
 
 class SearchUserFragment : BaseFragment<FragmentSearchUserBinding, SearchUserViewModel>() {
@@ -33,6 +32,8 @@ class SearchUserFragment : BaseFragment<FragmentSearchUserBinding, SearchUserVie
     
     private var scrollListener by autoCleared<EndlessRecyclerOnScrollListener>()
     
+    private val mainViewModel by sharedViewModel<MainViewModel>()
+    
     override fun setupView() {
         
         binding.menu.clicks()
@@ -40,12 +41,14 @@ class SearchUserFragment : BaseFragment<FragmentSearchUserBinding, SearchUserVie
                 .onEach {
                     LogUtils.d("clicks", "TEST")
                 }
-                .launchIn(viewLifecycleOwner.lifecycleScope)
+                .launchIn(coroutineScope)
         
         adapter = UserAdapter().apply {
             registerItemClickListener(object : OnItemClickListener<User> {
                 override fun onItemClick(item: User, position: Int, view: View?) {
                     viewModel.insertUser(item)
+        
+                    coroutineScope.launch { mainViewModel.testBehaviorRelay.onNext(value = item) }
                 }
             })
         }
@@ -57,7 +60,6 @@ class SearchUserFragment : BaseFragment<FragmentSearchUserBinding, SearchUserVie
                 viewModel.searchUser(binding.edtSearch.text.toString())
             }
         }
-        
         
         with(binding.recyclerView) {
             adapter = this@SearchUserFragment.adapter
