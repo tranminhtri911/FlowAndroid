@@ -9,6 +9,7 @@ import com.example.flowmvvm.data.source.repositories.AppDBRepository
 import com.example.flowmvvm.data.source.repositories.UserRepository
 import com.example.flowmvvm.utils.Constants
 import com.example.flowmvvm.utils.LogUtils
+import com.example.flowmvvm.utils.dispatchers.BaseDispatcherProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class SearchUserViewModel
 constructor(
+        private val dispatcherProvider: BaseDispatcherProvider,
         private val userRepository: UserRepository,
         private val appDBRepository: AppDBRepository) : BaseViewModel() {
     
@@ -35,7 +37,7 @@ constructor(
                                 }
                     }
                     .map { it.toMutableList() }
-                    .flowOn(Dispatchers.Main)
+                    .flowOn(dispatcherProvider.ui())
                     .collect {
                         networkState.value = NetworkState.SUCCESS(it)
                     }
@@ -50,7 +52,7 @@ constructor(
             userRepository.searchRepository(query, nextPage)
                     .catch { networkState.value = NetworkState.ERROR(it) }
                     .map { it.toMutableList() }
-                    .flowOn(Dispatchers.Main)
+                    .flowOn(dispatcherProvider.ui())
                     .collect {
                         networkState.value = NetworkState.SUCCESS(it, isLoadMore)
                     }

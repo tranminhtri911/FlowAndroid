@@ -6,8 +6,8 @@ import androidx.lifecycle.asLiveData
 import com.example.flowmvvm.data.model.User
 import com.example.flowmvvm.data.source.local.dao.AppDatabase
 import com.example.flowmvvm.data.source.local.dao.UserEntity
+import com.example.flowmvvm.utils.dispatchers.BaseDispatcherProvider
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -24,14 +24,17 @@ interface AppDBRepository {
 }
 
 class AppDBRepositoryImpl
-constructor(private val appDB: AppDatabase, private val gson: Gson) : AppDBRepository {
+constructor(
+        private val dispatcherProvider: BaseDispatcherProvider,
+        private val appDB: AppDatabase,
+        private val gson: Gson) : AppDBRepository {
     
     override fun getUsers(): LiveData<List<User>> {
         return appDB.userDao().getAll()
                 .map { list ->
                     list.map { it.userFromEntity(gson) }
                 }
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io())
                 .asLiveData()
     }
     
@@ -40,7 +43,7 @@ constructor(private val appDB: AppDatabase, private val gson: Gson) : AppDBRepos
             val entity = UserEntity().userToEntity(user, gson)
             appDB.userDao().delete(entity)
             emit(Unit)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io())
     }
     
     override fun insertUser(user: User): Flow<Unit> {
@@ -48,7 +51,7 @@ constructor(private val appDB: AppDatabase, private val gson: Gson) : AppDBRepos
             val entity = UserEntity().userToEntity(user, gson)
             appDB.userDao().insertOrUpdate(entity)
             emit(Unit)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io())
     }
     
     override fun insertAllUser(users: List<User>): Flow<Unit> {
@@ -56,7 +59,7 @@ constructor(private val appDB: AppDatabase, private val gson: Gson) : AppDBRepos
             val entities = users.map { UserEntity().userToEntity(it, gson) }
             appDB.userDao().insertOrUpdateAll(entities)
             emit(Unit)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcherProvider.io())
     }
     
     private fun transformUserEntity(data: LiveData<List<UserEntity>>): LiveData<MutableList<User>> {

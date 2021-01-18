@@ -13,6 +13,8 @@ import com.example.flowmvvm.data.source.remote.api.middleware.DoubleAdapter
 import com.example.flowmvvm.data.source.remote.api.middleware.IntegerAdapter
 import com.example.flowmvvm.di.AppModuleCons.DB_NAME
 import com.example.flowmvvm.utils.DateTimeUtils
+import com.example.flowmvvm.utils.dispatchers.BaseDispatcherProvider
+import com.example.flowmvvm.utils.dispatchers.DispatcherProvider
 import com.example.flowmvvm.utils.rxAndroid.RxBaseSchedulerProvider
 import com.example.flowmvvm.utils.rxAndroid.RxSchedulerProvider
 import com.google.gson.FieldNamingPolicy
@@ -31,6 +33,8 @@ val AppModule = module {
     single { provideAppDatabase(get()) }
 
     single { provideGson() }
+    
+    single { provideBaseDispatcherProvider() }
 }
 
 
@@ -40,6 +44,10 @@ fun provideResources(app: Application): Resources {
 
 fun provideSharedPrefsApi(app: Application): SharedPrefsApi {
     return SharedPrefsImpl(app)
+}
+
+fun provideBaseDispatcherProvider(): BaseDispatcherProvider {
+    return DispatcherProvider()
 }
 
 fun provideBaseSchedulerProvider(): RxBaseSchedulerProvider {

@@ -5,6 +5,7 @@ import com.example.flowmvvm.data.source.local.sharedprf.SharedPrefsApi
 import com.example.flowmvvm.data.source.local.sharedprf.SharedPrefsKey
 import com.example.flowmvvm.data.source.remote.api.response.ApiResponse
 import com.example.flowmvvm.data.source.remote.service.ApiService
+import com.example.flowmvvm.utils.dispatchers.BaseDispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,7 @@ interface UserRepository {
 
 class UserRepositoryImpl
 constructor(
+        private val dispatcherProvider: BaseDispatcherProvider,
         private val apiService: ApiService,
         private val sharedPrefsApi: SharedPrefsApi,
         private val gson: Gson
@@ -33,7 +35,7 @@ constructor(
     override fun searchRepository(query: String, page: Int): Flow<List<User>> {
         return flow { emit(apiService.searchRepository(query, page)) }
                 .mapNotNull { it.data }
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io())
     }
     
     override suspend fun searchRepositoryPaging(query: String, page: Int): ApiResponse<List<User>> {
